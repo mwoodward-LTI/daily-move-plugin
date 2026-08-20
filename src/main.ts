@@ -4,8 +4,8 @@ import { adjacentDailyNote, dailyNoteDate } from './daily-notes';
 const NAV_CLASS = 'daily-move-nav';
 
 const STEPS = [
-	{ step: 1, id: 'next-daily-note', icon: 'arrow-right', label: 'Next daily note' },
-	{ step: -1, id: 'previous-daily-note', icon: 'arrow-left', label: 'Previous daily note' },
+	{ step: 1, id: 'next-daily-note', icon: 'fast-forward', label: 'Next daily note' },
+	{ step: -1, id: 'previous-daily-note', icon: 'fast-backward', label: 'Previous daily note' },
 ] as const;
 
 export default class DailyMovePlugin extends Plugin {
