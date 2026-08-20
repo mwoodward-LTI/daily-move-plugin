@@ -1,11 +1,9 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "daily-move-plugin",
+	"name": "Daily Move",
 	"version": "1.0.0",
-	"minAppVersion": "1.0.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"minAppVersion": "1.1.0",
+	"description": "Adds back/forward arrows to daily notes so you can step through them day by day.",
+	"author": "Mitch Woodward",
 	"isDesktopOnly": false
 }
