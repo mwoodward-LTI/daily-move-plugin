@@ -2,16 +2,13 @@
 	"name": "daily-move-plugin",
 	"version": "1.0.0",
 	"description": "Step through Obsidian daily notes with back/forward arrows",
-	"main": "main.js",
 	"type": "module",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"lint": "eslint .",
 		"test": "node test/daily-notes.test.mjs"
 	},
-	"keywords": [],
 	"license": "0-BSD",
 	"devDependencies": {
 		"@eslint/js": "^9.39.4",

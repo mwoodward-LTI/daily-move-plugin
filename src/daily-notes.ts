@@ -1,26 +1,19 @@
 import { App, TFile, moment } from 'obsidian';
 
-/** Settings owned by the core Daily notes plugin. Not part of the public API. */
-interface DailyNotesOptions {
-	folder?: string;
-	format?: string;
-}
-
-type AppWithInternalPlugins = App & {
-	internalPlugins?: {
-		getPluginById(
-			id: string,
-		): { instance?: { options?: DailyNotesOptions } } | null;
-	};
-};
-
 const DEFAULT_FORMAT = 'YYYY-MM-DD';
 
-function dailyNotesOptions(app: App): DailyNotesOptions {
+/** Folder and date format, read from the core Daily notes plugin's private API. */
+function dailyNotesOptions(app: App): { folder?: string; format?: string } {
+	const internal = app as App & {
+		internalPlugins?: {
+			getPluginById(id: string): {
+				instance?: { options?: { folder?: string; format?: string } };
+			} | null;
+		};
+	};
 	return (
-		(app as AppWithInternalPlugins).internalPlugins?.getPluginById(
-			'daily-notes',
-		)?.instance?.options ?? {}
+		internal.internalPlugins?.getPluginById('daily-notes')?.instance
+			?.options ?? {}
 	);
 }
 
