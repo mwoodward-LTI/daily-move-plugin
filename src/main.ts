@@ -3,6 +3,7 @@ import { adjacentDailyNote, dailyNoteDate } from './daily-notes';
 
 const NAV_CLASS = 'daily-move-nav';
 
+// addAction prepends, so next is declared first to leave back on the left.
 const STEPS = [
 	{ step: 1, id: 'next-daily-note', icon: 'fast-forward', label: 'Next daily note' },
 	{ step: -1, id: 'previous-daily-note', icon: 'rewind', label: 'Previous daily note' },

@@ -58,4 +58,17 @@ assert.equal(
 	'2026-01-02.md',
 );
 
+// A daily-note path missing from the vault index must not fall through to the
+// oldest note (notes[-1 + 1]).
+assert.equal(jump('Daily/2026-03-01.md', 1), null);
+assert.equal(jump('Daily/2026-03-01.md', -1), null);
+
+// Daily notes plugin disabled: no naming scheme, so nothing is a daily note.
+const off = {
+	internalPlugins: { getPluginById: () => ({}) },
+	vault: { getMarkdownFiles: () => [{ path: '2026-01-01.md' }] },
+};
+assert.equal(dailyNoteDate(off, { path: '2026-01-01.md' }), null);
+assert.equal(adjacentDailyNote(off, { path: '2026-01-01.md' }, 1), null);
+
 console.log('ok');

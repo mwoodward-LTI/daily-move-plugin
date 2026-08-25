@@ -2,8 +2,14 @@ import { App, TFile, moment } from 'obsidian';
 
 const DEFAULT_FORMAT = 'YYYY-MM-DD';
 
-/** Folder and date format, read from the core Daily notes plugin's private API. */
-function dailyNotesOptions(app: App): { folder?: string; format?: string } {
+/**
+ * Folder and date format, read from the core Daily notes plugin's private API,
+ * or null when that plugin is disabled — without it there is no daily note
+ * naming scheme to honour, so guessing one would match unrelated files.
+ */
+function dailyNotesOptions(
+	app: App,
+): { folder?: string; format?: string } | null {
 	const internal = app as App & {
 		internalPlugins?: {
 			getPluginById(id: string): {
@@ -11,10 +17,9 @@ function dailyNotesOptions(app: App): { folder?: string; format?: string } {
 			} | null;
 		};
 	};
-	return (
-		internal.internalPlugins?.getPluginById('daily-notes')?.instance
-			?.options ?? {}
-	);
+	const instance = internal.internalPlugins?.getPluginById('daily-notes')
+		?.instance;
+	return instance ? (instance.options ?? {}) : null;
 }
 
 /**
@@ -23,7 +28,9 @@ function dailyNotesOptions(app: App): { folder?: string; format?: string } {
  * folder (not just the basename) also covers nested formats like `YYYY/MM/DD`.
  */
 export function dailyNoteDate(app: App, file: { path: string }): number | null {
-	const { folder, format } = dailyNotesOptions(app);
+	const options = dailyNotesOptions(app);
+	if (!options) return null;
+	const { folder, format } = options;
 	const root = (folder ?? '').replace(/^\/+|\/+$/g, '');
 	const prefix = root ? root + '/' : '';
 	if (!file.path.startsWith(prefix)) return null;
@@ -46,5 +53,6 @@ export function adjacentDailyNote(
 		.filter((n): n is { file: TFile; date: number } => n.date !== null)
 		.sort((a, b) => a.date - b.date);
 	const index = notes.findIndex((n) => n.file.path === file.path);
+	if (index === -1) return null;
 	return notes[index + step]?.file ?? null;
 }

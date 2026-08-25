@@ -1,5 +1,4 @@
 import esbuild from 'esbuild';
-import process from 'process';
 import { builtinModules } from 'node:module';
 
 const banner = `/*
@@ -10,28 +9,11 @@ if you want to view the source, please visit the github repository of this plugi
 
 const prod = process.argv[2] === 'production';
 
-const context = await esbuild.context({
-	banner: {
-		js: banner,
-	},
+const options = {
+	banner: { js: banner },
 	entryPoints: ['src/main.ts'],
 	bundle: true,
-	external: [
-		'obsidian',
-		'electron',
-		'@codemirror/autocomplete',
-		'@codemirror/collab',
-		'@codemirror/commands',
-		'@codemirror/language',
-		'@codemirror/lint',
-		'@codemirror/search',
-		'@codemirror/state',
-		'@codemirror/view',
-		'@lezer/common',
-		'@lezer/highlight',
-		'@lezer/lr',
-		...builtinModules,
-	],
+	external: ['obsidian', 'electron', ...builtinModules],
 	format: 'cjs',
 	target: 'es2021',
 	logLevel: 'info',
@@ -39,11 +21,7 @@ const context = await esbuild.context({
 	treeShaking: true,
 	outfile: 'main.js',
 	minify: prod,
-});
+};
 
-if (prod) {
-	await context.rebuild();
-	process.exit(0);
-} else {
-	await context.watch();
-}
+if (prod) await esbuild.build(options);
+else await (await esbuild.context(options)).watch();
